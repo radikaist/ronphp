@@ -13,13 +13,11 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Tahap 3 Berhasil! 🎉</h1>
         <p><span class="badge">RON PHP 1.0</span></p>
         <p><?= $pesan; ?></p>
         <p>Sekarang Controller dan View (Tampilan HTML) sudah terpisah dengan sangat rapi dan dinamis.</p>
     </div>
-
 </body>
 </html>
