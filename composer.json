@@ -1,0 +1,9 @@
+{
+    "name": "radika/framework",
+    "description": "Custom Framework radika.id",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
