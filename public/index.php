@@ -1,4 +1,8 @@
 <?php
+// --- NYALAKAN LAMPU DEBUG ---
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+// ----------------------------
 
 // 1. RON PHP Native Autoloader (Pengganti Composer)
 spl_autoload_register(function ($class) {
