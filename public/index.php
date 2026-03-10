@@ -1,4 +1,26 @@
 <?php
 
-echo "<h1>Tahap 1 Berhasil!</h1>";
-echo "<p>Pintu masuk aplikasi sudah berfungsi. Semua URL bermuara ke sini.</p>";
+// 1. RON PHP Native Autoloader (Pengganti Composer)
+spl_autoload_register(function ($class) {
+    $prefix = 'App\\';
+    $base_dir = __DIR__ . '/../app/';
+    
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
+    }
+    
+    $relative_class = substr($class, $len);
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+    
+    if (file_exists($file)) {
+        require $file;
+    }
+});
+
+// 2. Muat file rute
+require_once __DIR__ . '/../routes/web.php';
+
+// 3. Jalankan Mesin RON PHP
+use App\Core\App;
+App::run();
