@@ -2,12 +2,19 @@
 
 namespace App\Controllers;
 
-class HomeController
+use App\Core\Controller; // Panggil Base Controller
+
+class HomeController extends Controller // Wajib pakai "extends Controller"
 {
     public function index()
     {
-        echo "<h1>Tahap 2 Berhasil!</h1>";
-        echo "<p>Selamat datang di RON PHP (Radika Origin Native PHP).</p>";
-        echo "<p>Sistem Routing dan Controller sudah terhubung dengan sempurna!</p>";
+        // Siapkan data dinamis untuk dikirim ke halaman web
+        $data = [
+            'judul' => 'Halaman Utama RON PHP',
+            'pesan' => 'Selamat datang di RON PHP (Radika Origin Native PHP).'
+        ];
+
+        // Panggil file view 'home/index' dan kirimkan datanya
+        $this->view('home/index', $data);
     }
 }
