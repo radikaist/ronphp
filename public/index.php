@@ -25,6 +25,9 @@ spl_autoload_register(function ($class) {
 // 2. Muat file rute
 require_once __DIR__ . '/../routes/web.php';
 
-// 3. Jalankan Mesin RON PHP
+// 3. Muat file konfigurasi (BARIS BARU)
+require_once __DIR__ . '/../app/Config/config.php';
+
+// 4. Jalankan Mesin RON PHP
 use App\Core\App;
 App::run();
