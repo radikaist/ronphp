@@ -2,5 +2,8 @@
 
 use App\Core\App;
 
-// Format: App::get('/url', 'NamaController@namaMethod');
+// Rute Statis
 App::get('/', 'HomeController@index');
+
+// Rute Dinamis (Menangkap Parameter ID)
+App::get('/user/{id}', 'UserController@detail');

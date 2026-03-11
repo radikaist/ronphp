@@ -11,17 +11,20 @@
         p { line-height: 1.6; }
         .badge { display: inline-block; padding: 5px 10px; background: #198754; color: white; border-radius: 4px; font-size: 0.9em; margin-bottom: 15px; }
         
-        /* CSS Untuk Tabel Database */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background-color: #f2f2f2; color: #333; }
         tr:hover { background-color: #f5f5f5; }
+        
+        /* CSS Tombol Aksi */
+        .btn-sm { padding: 5px 10px; background-color: #ffc107; color: #000; text-decoration: none; border-radius: 3px; font-size: 0.85em; font-weight: bold;}
+        .btn-sm:hover { background-color: #e0a800; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Tahap 4 Berhasil! 🎉</h1>
-        <p><span class="badge">RON PHP 1.0 - Full MVC</span></p>
+        <h1>Tahap 5 Berhasil! 🎉</h1>
+        <p><span class="badge">RON PHP 1.0 - Rute Dinamis Aktif</span></p>
         <p><?= $pesan; ?></p>
         
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
@@ -33,6 +36,7 @@
                     <th>ID</th>
                     <th>Nama</th>
                     <th>Email</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,11 +45,13 @@
                         <td><?= $user['id']; ?></td>
                         <td><?= $user['nama']; ?></td>
                         <td><?= $user['email']; ?></td>
+                        <td>
+                            <a href="/user/<?= $user['id']; ?>" class="btn-sm">Lihat Profil</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-
     </div>
 </body>
 </html>
