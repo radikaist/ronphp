@@ -25,3 +25,8 @@ App::get('/user/delete/{id}', 'UserController@delete');
 
 // Rute Dinamis Detail
 App::get('/user/{id}', 'UserController@detail');
+
+// Rute Manajemen Menu
+App::get('/menu', 'MenuController@index');
+App::post('/menu/store', 'MenuController@store');
+App::get('/menu/delete/{id}', 'MenuController@delete');
