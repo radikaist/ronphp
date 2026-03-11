@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?= $judul ?? 'RON PHP Dashboard'; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,21 +18,35 @@
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-body); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+        /* --- PERBAIKAN DI SINI: Gunakan 100dvh untuk Mobile --- */
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: var(--bg-body); 
+            color: var(--text-dark); 
+            display: flex; 
+            height: 100vh; /* Fallback untuk browser lawas */
+            height: 100dvh; /* Dynamic Height penyelamat layar HP */
+            overflow: hidden; 
+        }
 
         .app-container { display: flex; width: 100%; height: 100%; position: relative; }
 
         /* --- SIDEBAR KIRI (TIPIS) --- */
         .sidebar-thin { width: 75px; min-width: 75px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; z-index: 30; }
-        .logo-box { height: 75px; display: flex; align-items: center; justify-content: center; width: 100%; border-bottom: 1px solid var(--border-color); }
+        /* Tambahkan min-height agar tidak menyusut tertekan flexbox */
+        .logo-box { height: 75px; min-height: 75px; display: flex; align-items: center; justify-content: center; width: 100%; border-bottom: 1px solid var(--border-color); }
         .ron-logo { font-size: 24px; font-weight: 900; font-style: italic; color: var(--ron-blue); letter-spacing: -1px; }
 
         .icon-menu { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 15px; width: 100%; gap: 12px; overflow-y: auto;}
+        /* Sembunyikan scrollbar di sidebar tipis agar tetap elegan */
+        .icon-menu::-webkit-scrollbar { width: 0; }
+
         .icon-btn { width: 46px; height: 46px; min-height: 46px; display: flex; justify-content: center; align-items: center; border-radius: 10px; color: var(--text-gray); font-size: 18px; text-decoration: none; transition: 0.2s; }
         .icon-btn:hover { color: var(--ron-blue); }
         .icon-btn.active { background: var(--ron-light-blue); color: var(--ron-blue); }
 
-        .sidebar-bottom { padding-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+        /* Penyesuaian padding bawah sedikit dikurangi */
+        .sidebar-bottom { padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
         .avatar-box img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: 0.3s; cursor: pointer;}
         .avatar-box img:hover { border-color: var(--ron-blue); }
 
@@ -40,7 +54,7 @@
         .sidebar-wide { width: 220px; background: #fafbfc; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; transition: margin-left 0.3s ease, transform 0.3s ease; }
         .sidebar-wide.hidden { margin-left: -220px; } 
 
-        .wide-header { height: 75px; display: flex; align-items: center; padding: 0 25px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: #111; border-bottom: 1px solid var(--border-color); }
+        .wide-header { height: 75px; min-height: 75px; display: flex; align-items: center; padding: 0 25px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: #111; border-bottom: 1px solid var(--border-color); }
         .wide-menu { padding: 15px; display: flex; flex-direction: column; gap: 5px; overflow-y: auto;}
         .wide-link { padding: 10px 15px; text-decoration: none; color: var(--text-gray); border-radius: 6px; font-size: 14.5px; transition: 0.2s; }
         .wide-link:hover { color: var(--ron-blue); }
@@ -69,7 +83,7 @@
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
-            z-index: 15; /* Di bawah sidebar tapi di atas konten */
+            z-index: 15;
             opacity: 0; visibility: hidden; transition: 0.3s;
         }
         .sidebar-overlay.show { opacity: 1; visibility: visible; }
@@ -78,15 +92,16 @@
         @media (max-width: 768px) {
             .sidebar-wide { 
                 position: fixed; 
-                left: 75px; /* Nempel di sebelah sidebar-thin */
+                left: 75px; 
                 top: 0;
-                height: 100vh; 
+                height: 100vh; /* Fallback */
+                height: 100dvh; /* Terapkan juga di sini */
                 box-shadow: 5px 0 15px rgba(0,0,0,0.1); 
-                margin-left: 0; /* Reset margin */
-                transform: translateX(-150%); /* Geser ke luar layar */
+                margin-left: 0; 
+                transform: translateX(-150%); 
             }
-            .sidebar-wide.hidden { margin-left: 0; } /* Netralkan class hidden desktop */
-            .sidebar-wide.show-mobile { transform: translateX(0); } /* Tampilkan laci */
+            .sidebar-wide.hidden { margin-left: 0; } 
+            .sidebar-wide.show-mobile { transform: translateX(0); } 
             
             .topbar { padding: 0 20px; }
             main { padding: 20px 15px; }
