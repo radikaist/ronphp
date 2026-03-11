@@ -3,19 +3,15 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Models\UserModel; // Jangan lupa panggil Model-nya
+use App\Models\UserModel;
 
 class UserController extends Controller 
 {
     public function detail($id)
     {
-        // Panggil Model
         $model = new UserModel();
-        
-        // Tarik data 1 pengguna berdasarkan ID dari URL
         $user = $model->getUserById($id);
 
-        // Jika user dengan ID tersebut tidak ada di database, lempar ke halaman 404
         if (!$user) {
             http_response_code(404);
             echo "<h1 style='text-align:center; margin-top:50px;'>404 - Pengguna Tidak Ditemukan!</h1>";
@@ -23,13 +19,36 @@ class UserController extends Controller
             return;
         }
 
-        // Siapkan data untuk dikirim ke View
         $data = [
             'judul' => 'Detail Profil: ' . $user['nama'],
-            'user'  => $user // Mengirim array data user yang didapat dari database
+            'user'  => $user
         ];
 
-        // Tampilkan halaman detail
         $this->view('users/detail', $data);
+    }
+
+    // METHOD BARU: Menampilkan Form Tambah
+    public function create()
+    {
+        $data = [
+            'judul' => 'Tambah Pengguna Baru'
+        ];
+        $this->view('users/create', $data);
+    }
+
+    // METHOD BARU: Memproses Data Form
+    public function store()
+    {
+        $model = new UserModel();
+        
+        // Eksekusi fungsi insertUser dengan melempar data $_POST
+        if ($model->insertUser($_POST) > 0) {
+            // Jika berhasil disimpan, langsung tendang (redirect) kembali ke Beranda
+            header('Location: /');
+            exit;
+        } else {
+            // Jika gagal
+            die("Gagal menyimpan data ke database.");
+        }
     }
 }
