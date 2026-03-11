@@ -1,7 +1,9 @@
-<footer style="margin-top: auto; padding-top: 30px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 13px;">
-            &copy; <?= date('Y'); ?> <strong>RON PHP Framework</strong>. All rights reserved.
-        </footer>
+</main>
+            <footer style="padding: 20px 30px; text-align: left; color: #94a3b8; font-size: 13px; border-top: 1px solid #e2e8f0; background: #fff;">
+                &copy; <?= date('Y'); ?> <strong>RON PHP Framework</strong>. Dibuat oleh Radika Istiawan.
+            </footer>
 
-    </div> 
+        </div> 
+        </div> 
     </body>
 </html>

@@ -4,92 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $judul ?? 'RON PHP Dashboard'; ?></title>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- TEMA DUAL SIDEBAR (LIGHT & CLEAN) --- */
+        /* --- TEMA DUAL-SIDEBAR PREMIUM --- */
         :root {
-            --bg-body: #f8f9fa;
-            --border-color: #e5e7eb;
-            --primary-blue: #3b82f6; /* Biru terang khas premium admin */
-            --primary-light: #eff6ff; /* Background biru sangat pudar untuk menu aktif */
+            --ron-blue: #3b82f6;
+            --ron-light-blue: #eff6ff;
             --text-dark: #1e293b;
-            --text-muted: #64748b;
+            --text-gray: #64748b;
+            --border-color: #e2e8f0;
+            --bg-body: #f8fafc;
+            --sidebar-bg: #ffffff;
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
-            height: 100vh; 
-            display: flex; 
-            overflow: hidden; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
             background: var(--bg-body); 
             color: var(--text-dark); 
-        }
-
-        /* 1. SIDEBAR PALING KIRI (IKON SAJA) */
-        .sidebar-primary {
-            width: 72px;
-            background: #ffffff;
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 0;
-            z-index: 10;
-        }
-        .logo-icon { font-weight: 800; font-size: 22px; color: var(--primary-blue); text-decoration: none; font-style: italic; margin-bottom: 30px; letter-spacing: -1px; }
-        .nav-icons { display: flex; flex-direction: column; gap: 8px; flex: 1; width: 100%; align-items: center; }
-        .icon-item { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: var(--text-muted); font-size: 22px; text-decoration: none; transition: 0.2s; }
-        .icon-item:hover { color: var(--primary-blue); }
-        .icon-item.active { background: var(--primary-light); color: var(--primary-blue); }
-        
-        /* Area Bawah Sidebar Kiri (Settings & Profile) */
-        .bottom-icons { display: flex; flex-direction: column; gap: 15px; margin-top: auto; align-items: center; padding-top: 20px; border-top: 1px solid var(--border-color); width: 100%;}
-        .avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--primary-blue); object-fit: cover;}
-
-        /* 2. SIDEBAR KEDUA (TEKS SUB-MENU) */
-        .sidebar-secondary {
-            width: 240px;
-            background: #ffffff;
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            z-index: 9;
-        }
-        .sidebar-header { padding: 25px 20px 15px 20px; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; color: #0f172a; }
-        .sub-menu { list-style: none; padding: 0 12px; display: flex; flex-direction: column; gap: 4px; }
-        .sub-link { display: block; padding: 10px 15px; border-radius: 6px; text-decoration: none; color: var(--text-muted); font-size: 14.5px; transition: 0.2s; }
-        .sub-link:hover { color: var(--text-dark); background: #f8fafc; }
-        .sub-link.active { background: var(--primary-light); color: var(--primary-blue); font-weight: 500; }
-
-        /* 3. AREA KONTEN UTAMA */
-        .main-content { 
-            flex: 1; 
             display: flex; 
-            flex-direction: column; 
-            overflow-y: auto; 
-            padding: 30px 40px; 
+            height: 100vh; 
+            overflow: hidden; 
         }
 
-        /* Update Desain Card & Komponen untuk menyesuaikan tema terang */
-        .card { background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; }
-        h1, h2, h3 { color: #0f172a; font-weight: 600; margin-bottom: 15px; }
-        .badge { display: inline-block; padding: 5px 10px; background: #10b981; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 14px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14.5px;}
-        th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
-        tr:hover { background: #f8fafc; }
+        .app-container { display: flex; width: 100%; height: 100%; }
 
-        .btn, .btn-sm { display: inline-block; padding: 8px 16px; background: var(--primary-blue); color: white; text-decoration: none; border-radius: 6px; font-size: 14px; border: none; font-weight: 500; cursor: pointer;}
-        .btn:hover, .btn-sm:hover { background: #2563eb; }
-        .btn-sm { padding: 6px 12px; font-size: 13px; }
-        .btn-secondary { background: #64748b; }
-        .btn-secondary:hover { background: #475569; }
+        /* --- 1. SIDEBAR KIRI (TIPIS) --- */
+        .sidebar-thin { width: 75px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .logo-box { height: 75px; display: flex; align-items: center; justify-content: center; width: 100%; border-bottom: 1px solid var(--border-color); }
+        .ron-logo { font-size: 24px; font-weight: 900; font-style: italic; color: var(--ron-blue); letter-spacing: -1px; }
+
+        .icon-menu { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 15px; width: 100%; gap: 12px;}
+        .icon-btn { width: 46px; height: 46px; display: flex; justify-content: center; align-items: center; border-radius: 10px; color: var(--text-gray); font-size: 18px; text-decoration: none; transition: 0.2s; }
+        .icon-btn:hover { color: var(--ron-blue); }
+        .icon-btn.active { background: var(--ron-light-blue); color: var(--ron-blue); }
+
+        .sidebar-bottom { padding-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+        .avatar-box img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: 0.3s; cursor: pointer;}
+        .avatar-box img:hover { border-color: var(--ron-blue); }
+
+        /* --- 2. SIDEBAR TENGAH (LEBAR) --- */
+        .sidebar-wide { width: 220px; background: #fafbfc; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 9; }
+        .wide-header { height: 75px; display: flex; align-items: center; padding: 0 25px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: #111; border-bottom: 1px solid var(--border-color); }
+        .wide-menu { padding: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .wide-link { padding: 10px 15px; text-decoration: none; color: var(--text-gray); border-radius: 6px; font-size: 14.5px; transition: 0.2s; }
+        .wide-link:hover { color: var(--ron-blue); }
+        .wide-link.active { background: var(--ron-light-blue); color: var(--ron-blue); font-weight: 500; }
+
+        /* --- 3. AREA KONTEN UTAMA --- */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .topbar { height: 75px; background: #fff; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; padding: 0 30px; color: var(--text-gray); font-size: 14px;}
+        main { padding: 30px; flex: 1; max-width: 1000px; }
+
+        /* CSS Komponen (Card, Tabel, Tombol) */
+        .card { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .badge { background: #10b981; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .btn { background: var(--ron-blue); color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; transition: 0.2s; border: none; }
+        .btn:hover { background: #2563eb; }
+        .btn-sm { padding: 5px 12px; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { color: var(--text-gray); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; background: #f8fafc;}
+        tr:hover { background: #f1f5f9; }
     </style>
 </head>
 <body>
     
-    <?php require_once __DIR__ . '/sidebar.php'; ?>
+    <div class="app-container">
+        
+        <?php require_once __DIR__ . '/sidebar.php'; ?>
 
-    <div class="main-content">
+        <div class="main-content">
+            
+            <div class="topbar">
+                <i class="fa-solid fa-bars" style="margin-right: 15px; cursor: pointer;"></i> RON PHP Framework v1.0
+            </div>
+
+            <main>
