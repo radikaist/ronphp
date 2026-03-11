@@ -1,28 +1,23 @@
 <?php
-
 namespace App\Controllers;
-
 use App\Core\Controller;
-use App\Models\UserModel; // Panggil file UserModel
+use App\Models\UserModel;
+use App\Core\Auth; // Panggil penjaga keamanan
 
 class HomeController extends Controller 
 {
-    public function index()
-    {
-        // 1. Panggil Model
-        $model = new UserModel();
-        
-        // 2. Tarik data dari database
-        $dataUsers = $model->getAllUsers(); 
+    public function __construct() {
+        Auth::check(); // Gembok pintu!
+    }
 
-        // 3. Siapkan data untuk dikirim ke View
+    public function index() {
+        $model = new UserModel();
+        $dataUsers = $model->getAllUsers(); 
         $data = [
             'judul' => 'Halaman Utama RON PHP',
-            'pesan' => 'Selamat datang di RON PHP. Koneksi Database MySQL BERHASIL! 🚀',
-            'users' => $dataUsers // Masukkan data hasil query ke sini
+            'pesan' => 'Selamat datang kembali, ' . $_SESSION['user_nama'] . '! 🚀',
+            'users' => $dataUsers
         ];
-
-        // 4. Lempar ke tampilan HTML
         $this->view('home/index', $data);
     }
 }

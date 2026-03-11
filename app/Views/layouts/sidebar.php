@@ -13,9 +13,10 @@
     </div>
 
     <div class="sidebar-bottom">
-        <a href="#" class="icon-btn"><i class="fa-solid fa-gear"></i></a>
-        <div class="avatar-box" title="Radika Istiawan">
-            <img src="https://ui-avatars.com/api/?name=Radika+Istiawan&background=3b82f6&color=fff&bold=true" alt="Avatar">
+        <a href="/logout" class="icon-btn" title="Keluar"><i class="fa-solid fa-power-off" style="color: #ef4444;"></i></a>
+        
+        <div class="avatar-box" title="<?= $_SESSION['user_nama'] ?? 'Guest'; ?>">
+            <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['user_nama'] ?? 'Guest'); ?>&background=3b82f6&color=fff&bold=true" alt="Avatar">
         </div>
     </div>
 </nav>

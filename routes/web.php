@@ -16,3 +16,8 @@ App::get('/user/delete/{id}', 'UserController@delete');
 
 // Rute Dinamis Detail
 App::get('/user/{id}', 'UserController@detail');
+
+// Rute Autentikasi
+App::get('/login', 'AuthController@index');
+App::post('/login', 'AuthController@login');
+App::get('/logout', 'AuthController@logout');

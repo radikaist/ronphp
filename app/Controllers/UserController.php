@@ -6,8 +6,12 @@ use App\Core\Controller;
 use App\Models\UserModel;
 use App\Core\Flasher; // Panggil alat Flasher
 
-class UserController extends Controller 
+class UserController extends Controller
+ 
 {
+    public function __construct() {
+        Auth::check(); // Gembok pintu!
+    }
     public function detail($id) {
         $model = new UserModel();
         $user = $model->getUserById($id);
