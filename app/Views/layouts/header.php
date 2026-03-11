@@ -4,126 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $judul ?? 'RON PHP Dashboard'; ?></title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        /* --- TEMA LIGHT SMARTADMIN / POWERADMIN --- */
+        /* --- TEMA DUAL SIDEBAR (LIGHT & CLEAN) --- */
         :root {
-            --primary-color: #02689b; 
-            --header-bg: #2b3643; 
-            --bg-body: #eef1f5; 
-            --sidebar-bg: #ffffff; /* Sidebar Terang/Clean */
-            --text-main: #333333;
-            --text-muted: #888888;
-            --border-color: #e7ecf1;
+            --bg-body: #f8f9fa;
+            --border-color: #e5e7eb;
+            --primary-blue: #3b82f6; /* Biru terang khas premium admin */
+            --primary-light: #eff6ff; /* Background biru sangat pudar untuk menu aktif */
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         
         body { 
-            font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
+            height: 100vh; 
             display: flex; 
-            flex-direction: column; 
-            height: 100vh; /* Kunci agar sidebar & konten bisa di-scroll terpisah */
-            overflow: hidden;
+            overflow: hidden; 
+            background: var(--bg-body); 
+            color: var(--text-dark); 
         }
 
-        /* Top Navbar */
-        header { 
-            background: var(--header-bg); 
-            color: white; 
-            padding: 0 20px; 
-            height: 60px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-        header .logo { font-size: 1.4em; font-weight: 700; color: white; text-decoration: none; letter-spacing: 1px;}
-        header .logo span { color: #3498db; }
-        header .user-menu { font-size: 0.9em; color: #aeb2b7; }
-
-        /* Container Pembagi Layar (Kiri Sidebar, Kanan Konten) */
-        .app-wrapper {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* Desain Sidebar Clean & Terang */
-        .sidebar {
-            width: 250px;
-            background: var(--sidebar-bg);
+        /* 1. SIDEBAR PALING KIRI (IKON SAJA) */
+        .sidebar-primary {
+            width: 72px;
+            background: #ffffff;
             border-right: 1px solid var(--border-color);
-            overflow-y: auto;
-            box-shadow: 1px 0 5px rgba(0,0,0,0.02);
-        }
-        .sidebar-menu { padding: 20px 0; }
-        .menu-label { font-size: 0.75em; font-weight: 700; color: #a0a8b1; padding: 0 20px; margin-bottom: 10px; letter-spacing: 1px; }
-        .nav-list { list-style: none; margin-bottom: 25px; }
-        .nav-item { margin-bottom: 2px; }
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: #555;
-            text-decoration: none;
-            font-size: 0.95em;
-            font-weight: 600;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
-        }
-        .nav-link .icon { margin-right: 12px; font-size: 1.1em; }
-        .nav-link:hover { background: #f8f9fa; color: var(--primary-color); border-left-color: #cfdadd; }
-        .nav-link.active { background: #f1f6f9; color: var(--primary-color); border-left-color: var(--primary-color); }
-        .text-danger:hover { color: #dc3545 !important; border-left-color: #f5c6cb !important; background: #fdf3f4; }
-
-        /* Area Kanan (Konten + Footer) */
-        .main-wrapper {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            align-items: center;
+            padding: 15px 0;
+            z-index: 10;
+        }
+        .logo-icon { font-weight: 800; font-size: 22px; color: var(--primary-blue); text-decoration: none; font-style: italic; margin-bottom: 30px; letter-spacing: -1px; }
+        .nav-icons { display: flex; flex-direction: column; gap: 8px; flex: 1; width: 100%; align-items: center; }
+        .icon-item { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: var(--text-muted); font-size: 22px; text-decoration: none; transition: 0.2s; }
+        .icon-item:hover { color: var(--primary-blue); }
+        .icon-item.active { background: var(--primary-light); color: var(--primary-blue); }
+        
+        /* Area Bawah Sidebar Kiri (Settings & Profile) */
+        .bottom-icons { display: flex; flex-direction: column; gap: 15px; margin-top: auto; align-items: center; padding-top: 20px; border-top: 1px solid var(--border-color); width: 100%;}
+        .avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--primary-blue); object-fit: cover;}
+
+        /* 2. SIDEBAR KEDUA (TEKS SUB-MENU) */
+        .sidebar-secondary {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 9;
+        }
+        .sidebar-header { padding: 25px 20px 15px 20px; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; color: #0f172a; }
+        .sub-menu { list-style: none; padding: 0 12px; display: flex; flex-direction: column; gap: 4px; }
+        .sub-link { display: block; padding: 10px 15px; border-radius: 6px; text-decoration: none; color: var(--text-muted); font-size: 14.5px; transition: 0.2s; }
+        .sub-link:hover { color: var(--text-dark); background: #f8fafc; }
+        .sub-link.active { background: var(--primary-light); color: var(--primary-blue); font-weight: 500; }
+
+        /* 3. AREA KONTEN UTAMA */
+        .main-content { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+            padding: 30px 40px; 
         }
 
-        main { flex: 1; padding: 30px 20px; max-width: 1000px; margin: 0 auto; width: 100%; }
-
-        /* Komponen Card */
-        .card { 
-            background: #ffffff; padding: 25px; border-radius: 4px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            border-top: 3px solid var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        h1, h2, h3 { color: #444; margin-bottom: 15px; font-weight: 600;}
-        .badge { display: inline-block; padding: 4px 8px; background: #28a745; color: white; border-radius: 3px; font-size: 0.8em; font-weight: 600; margin-bottom: 15px;}
-        .badge-warning { background: #ffc107; color: #333; }
-
-        /* Tabel & Tombol */
+        /* Update Desain Card & Komponen untuk menyesuaikan tema terang */
+        .card { background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; }
+        h1, h2, h3 { color: #0f172a; font-weight: 600; margin-bottom: 15px; }
+        .badge { display: inline-block; padding: 5px 10px; background: #10b981; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #fbfcfd; font-weight: 600; color: #666; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;}
-        tr:hover { background-color: #f9fafb; }
+        th, td { padding: 14px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14.5px;}
+        th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+        tr:hover { background: #f8fafc; }
 
-        a.btn, .btn-sm { display: inline-block; padding: 8px 15px; background: var(--primary-color); color: white; text-decoration: none; border-radius: 3px; transition: background 0.2s; font-size: 0.9em; border: none;}
-        a.btn:hover, .btn-sm:hover { background: #014f76; }
-        .btn-sm { padding: 5px 10px; font-size: 0.8em; }
-        .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #5a6268; }
+        .btn, .btn-sm { display: inline-block; padding: 8px 16px; background: var(--primary-blue); color: white; text-decoration: none; border-radius: 6px; font-size: 14px; border: none; font-weight: 500; cursor: pointer;}
+        .btn:hover, .btn-sm:hover { background: #2563eb; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .btn-secondary { background: #64748b; }
+        .btn-secondary:hover { background: #475569; }
     </style>
 </head>
 <body>
     
-    <header>
-        <a href="/" class="logo">RON<span>PHP</span></a>
-        <div class="user-menu">👤 Administrator</div>
-    </header>
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
 
-    <div class="app-wrapper">
-        
-        <?php require_once __DIR__ . '/sidebar.php'; ?>
-
-        <div class="main-wrapper">
-            <main>
+    <div class="main-content">
