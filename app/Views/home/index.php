@@ -1,12 +1,8 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
-<div class="card">
-    <h1>Beranda Dashboard 🚀</h1>
-    <p><span class="badge">RON PHP 1.0 - Layouting System</span></p>
-    <p><?= $pesan; ?></p>
-    
-    <hr style="border: 0; border-top: 1px solid #e7ecf1; margin: 20px 0;">
+<?php App\Core\Flasher::flash(); ?>
 
+<div class="card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h3 style="margin: 0;">👥 Data Pengguna</h3>
         <a href="/user/create" class="btn">+ Tambah Pengguna</a>
@@ -28,7 +24,10 @@
                     <td><strong><?= $user['nama']; ?></strong></td>
                     <td><?= $user['email']; ?></td>
                     <td>
-                        <a href="/user/<?= $user['id']; ?>" class="btn-sm">Lihat Profil</a>
+                        <a href="/user/<?= $user['id']; ?>" class="btn-sm" style="background:#0ea5e9; color:white;">Detail</a>
+                        <a href="/user/edit/<?= $user['id']; ?>" class="btn-sm" style="background:#f59e0b; color:white; margin: 0 5px;">Edit</a>
+                        
+                        <a href="/user/delete/<?= $user['id']; ?>" class="btn-sm" style="background:#ef4444; color:white;" onclick="return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

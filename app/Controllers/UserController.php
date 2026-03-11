@@ -4,51 +4,57 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\UserModel;
+use App\Core\Flasher; // Panggil alat Flasher
 
 class UserController extends Controller 
 {
-    public function detail($id)
-    {
+    public function detail($id) {
         $model = new UserModel();
         $user = $model->getUserById($id);
-
-        if (!$user) {
-            http_response_code(404);
-            echo "<h1 style='text-align:center; margin-top:50px;'>404 - Pengguna Tidak Ditemukan!</h1>";
-            echo "<div style='text-align:center;'><a href='/'>Kembali ke Beranda</a></div>";
-            return;
-        }
-
-        $data = [
-            'judul' => 'Detail Profil: ' . $user['nama'],
-            'user'  => $user
-        ];
-
-        $this->view('users/detail', $data);
+        $this->view('users/detail', ['judul' => 'Detail Profil', 'user' => $user]);
     }
 
-    // METHOD BARU: Menampilkan Form Tambah
-    public function create()
-    {
-        $data = [
-            'judul' => 'Tambah Pengguna Baru'
-        ];
-        $this->view('users/create', $data);
+    public function create() {
+        $this->view('users/create', ['judul' => 'Tambah Pengguna Baru']);
     }
 
-    // METHOD BARU: Memproses Data Form
-    public function store()
-    {
+    public function store() {
         $model = new UserModel();
-        
-        // Eksekusi fungsi insertUser dengan melempar data $_POST
         if ($model->insertUser($_POST) > 0) {
-            // Jika berhasil disimpan, langsung tendang (redirect) kembali ke Beranda
+            Flasher::setFlash($_POST['nama'], 'ditambahkan', 'success');
             header('Location: /');
             exit;
-        } else {
-            // Jika gagal
-            die("Gagal menyimpan data ke database.");
+        }
+    }
+
+    // MENAMPILKAN FORM EDIT
+    public function edit($id) {
+        $model = new UserModel();
+        $data = [
+            'judul' => 'Edit Pengguna',
+            'user'  => $model->getUserById($id)
+        ];
+        $this->view('users/edit', $data);
+    }
+
+    // MEMPROSES DATA UPDATE
+    public function update($id) {
+        $model = new UserModel();
+        // Pakai >= 0 karena jika tidak ada yang dirubah, rowCount() mengembalikan 0
+        if ($model->updateUser($id, $_POST) >= 0) {
+            Flasher::setFlash($_POST['nama'], 'diperbarui', 'success');
+            header('Location: /');
+            exit;
+        }
+    }
+
+    // MEMPROSES HAPUS DATA
+    public function delete($id) {
+        $model = new UserModel();
+        if ($model->deleteUser($id) > 0) {
+            Flasher::setFlash('ID #' . $id, 'dihapus', 'success');
+            header('Location: /');
+            exit;
         }
     }
 }

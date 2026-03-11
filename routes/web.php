@@ -5,9 +5,14 @@ use App\Core\App;
 // Rute Beranda
 App::get('/', 'HomeController@index');
 
-// Rute Tambah Data (Harus di atas rute {id})
-App::get('/user/create', 'UserController@create');   // Menampilkan Form
-App::post('/user/store', 'UserController@store');    // Memproses Data Form
+// Rute Tambah Data
+App::get('/user/create', 'UserController@create');
+App::post('/user/store', 'UserController@store');
+
+// Rute Edit, Update, dan Delete (Harus di atas {id} agar tidak tabrakan)
+App::get('/user/edit/{id}', 'UserController@edit');
+App::post('/user/update/{id}', 'UserController@update');
+App::get('/user/delete/{id}', 'UserController@delete');
 
 // Rute Dinamis Detail
 App::get('/user/{id}', 'UserController@detail');

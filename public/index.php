@@ -1,4 +1,7 @@
 <?php
+// NYALAKAN SESSION UNTUK FLASH MESSAGE (Taruh di baris paling atas)
+session_start();
+
 // --- NYALAKAN LAMPU DEBUG ---
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -25,7 +28,7 @@ spl_autoload_register(function ($class) {
 // 2. Muat file rute
 require_once __DIR__ . '/../routes/web.php';
 
-// 3. Muat file konfigurasi (BARIS BARU)
+// 3. Muat file konfigurasi
 require_once __DIR__ . '/../app/Config/config.php';
 
 // 4. Jalankan Mesin RON PHP
