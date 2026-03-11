@@ -21,3 +21,6 @@ App::get('/user/{id}', 'UserController@detail');
 App::get('/login', 'AuthController@index');
 App::post('/login', 'AuthController@login');
 App::get('/logout', 'AuthController@logout');
+
+// Rute Manajemen Role
+App::get('/role', 'RoleController@index');
