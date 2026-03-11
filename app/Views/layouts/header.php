@@ -20,10 +20,10 @@
         
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-body); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
 
-        .app-container { display: flex; width: 100%; height: 100%; }
+        .app-container { display: flex; width: 100%; height: 100%; position: relative; }
 
-        /* --- 1. SIDEBAR KIRI (TIPIS) --- */
-        .sidebar-thin { width: 75px; min-width: 75px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; z-index: 20; }
+        /* --- SIDEBAR KIRI (TIPIS) --- */
+        .sidebar-thin { width: 75px; min-width: 75px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; z-index: 30; }
         .logo-box { height: 75px; display: flex; align-items: center; justify-content: center; width: 100%; border-bottom: 1px solid var(--border-color); }
         .ron-logo { font-size: 24px; font-weight: 900; font-style: italic; color: var(--ron-blue); letter-spacing: -1px; }
 
@@ -36,19 +36,18 @@
         .avatar-box img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: 0.3s; cursor: pointer;}
         .avatar-box img:hover { border-color: var(--ron-blue); }
 
-        /* --- 2. SIDEBAR TENGAH (LEBAR) --- */
-        .sidebar-wide { width: 220px; background: #fafbfc; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 10; transition: margin-left 0.3s ease; }
-        /* Kelas pembantu untuk JavaScript Toggle */
+        /* --- SIDEBAR TENGAH (LEBAR) --- */
+        .sidebar-wide { width: 220px; background: #fafbfc; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; transition: margin-left 0.3s ease, transform 0.3s ease; }
         .sidebar-wide.hidden { margin-left: -220px; } 
 
-        .wide-header { height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: #111; border-bottom: 1px solid var(--border-color); }
+        .wide-header { height: 75px; display: flex; align-items: center; padding: 0 25px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: #111; border-bottom: 1px solid var(--border-color); }
         .wide-menu { padding: 15px; display: flex; flex-direction: column; gap: 5px; overflow-y: auto;}
         .wide-link { padding: 10px 15px; text-decoration: none; color: var(--text-gray); border-radius: 6px; font-size: 14.5px; transition: 0.2s; }
         .wide-link:hover { color: var(--ron-blue); }
         .wide-link.active { background: var(--ron-light-blue); color: var(--ron-blue); font-weight: 500; }
 
-        /* --- 3. AREA KONTEN UTAMA --- */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; }
+        /* --- KONTEN UTAMA --- */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; position: relative;}
         .topbar { height: 75px; min-height: 75px; background: #fff; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; padding: 0 30px; color: var(--text-gray); font-size: 14px;}
         main { padding: 30px; flex: 1; max-width: 1200px; width: 100%; margin: 0 auto;}
 
@@ -59,22 +58,36 @@
         .btn:hover { background: #2563eb; }
         .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
         
-        /* CSS Tabel Responsif */
-        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+        .table-responsive { overflow-x: auto; width: 100%; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { color: var(--text-gray); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; background: #f8fafc;}
         tr:hover { background: #f1f5f9; }
-        
-        /* Mencegah tombol aksi bertumpuk */
         .aksi-buttons { white-space: nowrap; }
 
-        /* Media Query untuk Layar HP / Tablet */
+        /* --- BACKDROP GELAP (OVERLAY UNTUK MOBILE) --- */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 15; /* Di bawah sidebar tapi di atas konten */
+            opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+        /* --- MEDIA QUERY (HP / TABLET) --- */
         @media (max-width: 768px) {
-            .sidebar-wide { position: absolute; left: 75px; height: 100%; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
-            /* Otomatis sembunyikan sidebar di HP */
-            .sidebar-wide { margin-left: -220px; }
-            .sidebar-wide.show-mobile { margin-left: 0; }
+            .sidebar-wide { 
+                position: fixed; 
+                left: 75px; /* Nempel di sebelah sidebar-thin */
+                top: 0;
+                height: 100vh; 
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1); 
+                margin-left: 0; /* Reset margin */
+                transform: translateX(-150%); /* Geser ke luar layar */
+            }
+            .sidebar-wide.hidden { margin-left: 0; } /* Netralkan class hidden desktop */
+            .sidebar-wide.show-mobile { transform: translateX(0); } /* Tampilkan laci */
+            
             .topbar { padding: 0 20px; }
             main { padding: 20px 15px; }
         }
@@ -85,6 +98,8 @@
     <div class="app-container">
         
         <?php require_once __DIR__ . '/sidebar.php'; ?>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
         <div class="main-content">
             
