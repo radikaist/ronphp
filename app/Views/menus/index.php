@@ -61,7 +61,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 50px; text-align:center;">NO</th>
+                        <th style="width: 40px; text-align:center;">NO</th>
+                        <th style="width: 70px; text-align:center;">URUTAN</th>
                         <th>MENU</th>
                         <th>INDUK</th>
                         <th>URL</th>
@@ -69,9 +70,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($menus as $m) : ?>
+                    <?php $no = 1; foreach ($menus as $m) : ?>
                         <tr>
-                            <td style="text-align:center; font-weight:bold; color:var(--text-gray);"><?= $m['urutan']; ?></td>
+                            <td style="text-align:center; color:#94a3b8; font-size: 13px;"><?= $no++; ?></td>
+                            
+                            <td style="text-align:center;">
+                                <span style="background: #eff6ff; color: #3b82f6; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; border: 1px solid #bfdbfe;">
+                                    <?= $m['urutan']; ?>
+                                </span>
+                            </td>
+                            
                             <td>
                                 <i class="fa-solid <?= $m['icon'] ?? 'fa-cube'; ?>" style="color: #94a3b8; width: 20px;"></i>
                                 <strong style="color: var(--text-dark);"><?= $m['nama_menu']; ?></strong>
