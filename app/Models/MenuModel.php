@@ -8,17 +8,18 @@ class MenuModel
     private $db;
     public function __construct() { $this->db = new Database(); }
 
+    // UPGRADE: Tambahkan ORDER BY m.urutan ASC
     public function getMenusByRole($role_id, $tipe = 'sidebar') {
-        $query = "SELECT m.* FROM menus m JOIN role_menu rm ON m.id = rm.menu_id WHERE rm.role_id = :role_id AND m.tipe = :tipe ORDER BY m.id ASC";
+        $query = "SELECT m.* FROM menus m JOIN role_menu rm ON m.id = rm.menu_id WHERE rm.role_id = :role_id AND m.tipe = :tipe ORDER BY m.urutan ASC, m.id ASC";
         $this->db->query($query);
         $this->db->bind(':role_id', $role_id);
         $this->db->bind(':tipe', $tipe);
         return $this->db->resultSet();
     }
 
-    // UPGRADE: Join tabel untuk mendapatkan nama induknya
+    // UPGRADE: Tambahkan m1.urutan ASC
     public function getAllMenus() {
-        $this->db->query('SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.tipe DESC, m1.parent_id ASC, m1.id ASC');
+        $this->db->query('SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.tipe DESC, m1.parent_id ASC, m1.urutan ASC, m1.id ASC');
         return $this->db->resultSet();
     }
 
@@ -37,27 +38,33 @@ class MenuModel
         return $this->db->single();
     }
 
-    // UPGRADE: Tambah parameter parent_id
+    // UPGRADE: Tambah parameter urutan
     public function insertMenu($data) {
         $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
-        $this->db->query('INSERT INTO menus (parent_id, nama_menu, url, icon, tipe) VALUES (:parent_id, :nama_menu, :url, :icon, :tipe)');
+        $urutan = empty($data['urutan']) ? 0 : $data['urutan'];
+
+        $this->db->query('INSERT INTO menus (parent_id, nama_menu, url, icon, urutan, tipe) VALUES (:parent_id, :nama_menu, :url, :icon, :urutan, :tipe)');
         $this->db->bind(':parent_id', $parent_id);
         $this->db->bind(':nama_menu', $data['nama_menu']);
         $this->db->bind(':url', $data['url']);
         $this->db->bind(':icon', $data['icon']);
+        $this->db->bind(':urutan', $urutan);
         $this->db->bind(':tipe', $data['tipe']);
         $this->db->execute();
         return $this->db->rowCount();
     }
 
-    // UPGRADE: Update parameter parent_id
+    // UPGRADE: Update parameter urutan
     public function updateMenu($id, $data) {
         $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
-        $this->db->query('UPDATE menus SET parent_id = :parent_id, nama_menu = :nama_menu, url = :url, icon = :icon, tipe = :tipe WHERE id = :id');
+        $urutan = isset($data['urutan']) && $data['urutan'] !== '' ? $data['urutan'] : 0;
+
+        $this->db->query('UPDATE menus SET parent_id = :parent_id, nama_menu = :nama_menu, url = :url, icon = :icon, urutan = :urutan, tipe = :tipe WHERE id = :id');
         $this->db->bind(':parent_id', $parent_id);
         $this->db->bind(':nama_menu', $data['nama_menu']);
         $this->db->bind(':url', $data['url']);
         $this->db->bind(':icon', $data['icon']);
+        $this->db->bind(':urutan', $urutan);
         $this->db->bind(':tipe', $data['tipe']);
         $this->db->bind(':id', $id);
         $this->db->execute();

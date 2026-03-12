@@ -19,7 +19,6 @@
         <div style="margin-bottom: 15px;">
             <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Pilih Menu Induk</label>
             <?php
-                // Menarik data menu induk murni langsung dari database untuk keperluan dropdown
                 $db = new \App\Core\Database();
                 $db->query("SELECT * FROM menus WHERE parent_id IS NULL AND tipe='sidebar'");
                 $induks = $db->resultSet();
@@ -36,9 +35,15 @@
             </select>
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Class Icon (FontAwesome)</label>
-            <input type="text" name="icon" value="<?= $menu['icon']; ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Class Icon</label>
+                <input type="text" name="icon" value="<?= $menu['icon']; ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <div style="flex: 1;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Urutan (Angka)</label>
+                <input type="number" name="urutan" value="<?= $menu['urutan']; ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
         </div>
         
         <div style="margin-bottom: 25px;">
