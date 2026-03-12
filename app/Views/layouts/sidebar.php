@@ -1,25 +1,24 @@
 <?php
 use App\Models\MenuModel;
+
 $menuModel = new MenuModel();
-$role_id = $_SESSION['role_id'] ?? 0;
+$role_id = $_SESSION['role_id'] ?? 0; 
 $current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Tarik data menu
 $all_menus = $menuModel->getMenusByRole($role_id, 'sidebar');
 
 $parents = [];
 $children = [];
 $active_parent_id = null;
 
-// Pisahkan Induk dan Anak
-foreach($all_menus as $menu) {
-    if (empty($menu['parent_id'])) {
-        $parents[$menu['id']] = $menu;
+// PERBAIKAN: Variabel $menu diganti menjadi $sb_menu agar tidak bentrok
+foreach($all_menus as $sb_menu) {
+    if (empty($sb_menu['parent_id'])) {
+        $parents[$sb_menu['id']] = $sb_menu;
     } else {
-        $children[$menu['parent_id']][] = $menu;
-        // Deteksi menu mana yang sedang aktif berdasarkan URL
-        if ($current_uri == $menu['url'] || (strpos($current_uri, $menu['url']) === 0 && $menu['url'] != '/')) {
-             $active_parent_id = $menu['parent_id'];
+        $children[$sb_menu['parent_id']][] = $sb_menu;
+        if ($current_uri == $sb_menu['url'] || (strpos($current_uri, $sb_menu['url']) === 0 && $sb_menu['url'] != '/')) {
+             $active_parent_id = $sb_menu['parent_id'];
         }
     }
 }
@@ -33,7 +32,7 @@ if ($current_uri == '/') {
     }
 }
 
-// Jika masih kosong (misal baru login), set default ke Induk pertama
+// Default ke Induk pertama jika masih kosong
 if (!$active_parent_id && !empty($parents)) {
     $active_parent_id = array_key_first($parents);
 }
@@ -45,14 +44,13 @@ if (!$active_parent_id && !empty($parents)) {
     </div>
     
     <div class="icon-menu">
-        <?php foreach($parents as $parent): ?>
+        <?php foreach($parents as $sb_parent): ?>
             <?php 
-                $is_active = ($parent['id'] == $active_parent_id) ? 'active' : ''; 
-                // Jika icon induk diklik, otomatis arahkan ke URL anak pertamanya
-                $link = isset($children[$parent['id']][0]) ? $children[$parent['id']][0]['url'] : '#';
+                $is_active = ($sb_parent['id'] == $active_parent_id) ? 'active' : ''; 
+                $link = isset($children[$sb_parent['id']][0]) ? $children[$sb_parent['id']][0]['url'] : '#';
             ?>
-            <a href="<?= $link; ?>" class="icon-btn <?= $is_active; ?>" title="<?= $parent['nama_menu']; ?>">
-                <i class="fa-solid <?= $parent['icon']; ?>"></i>
+            <a href="<?= $link; ?>" class="icon-btn <?= $is_active; ?>" title="<?= $sb_parent['nama_menu']; ?>">
+                <i class="fa-solid <?= $sb_parent['icon']; ?>"></i>
             </a>
         <?php endforeach; ?>
     </div>
@@ -71,10 +69,10 @@ if (!$active_parent_id && !empty($parents)) {
     </div>
     <div class="wide-menu">
         <?php if(isset($children[$active_parent_id])): ?>
-            <?php foreach($children[$active_parent_id] as $child): ?>
-                <?php $active = ($current_uri == $child['url'] || (strpos($current_uri, $child['url']) === 0 && $child['url'] != '/')) ? 'active' : ''; ?>
-                <a href="<?= $child['url']; ?>" class="wide-link <?= $active; ?>">
-                    <i class="fa-solid <?= $child['icon']; ?>" style="margin-right:8px; opacity:0.6;"></i> <?= $child['nama_menu']; ?>
+            <?php foreach($children[$active_parent_id] as $sb_child): ?>
+                <?php $active = ($current_uri == $sb_child['url'] || (strpos($current_uri, $sb_child['url']) === 0 && $sb_child['url'] != '/')) ? 'active' : ''; ?>
+                <a href="<?= $sb_child['url']; ?>" class="wide-link <?= $active; ?>">
+                    <i class="fa-solid <?= $sb_child['icon']; ?>" style="margin-right:8px; opacity:0.6;"></i> <?= $sb_child['nama_menu']; ?>
                 </a>
             <?php endforeach; ?>
         <?php endif; ?>
