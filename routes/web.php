@@ -6,25 +6,22 @@ App::get('/login', 'AuthController@index');
 App::post('/login', 'AuthController@login');
 App::get('/logout', 'AuthController@logout');
 
-// Rute Beranda
+// Rute Beranda (Dashboard Murni)
 App::get('/', 'HomeController@index');
 
-// Rute Manajemen Role
-App::get('/role', 'RoleController@index');
-App::get('/role/akses/{id}', 'RoleController@akses');       // Halaman Checkbox
-App::post('/role/simpanAkses/{id}', 'RoleController@simpanAkses'); // Proses Simpan
-
-// Rute Tambah Data
+// Rute Manajemen User (INI YANG BARU)
+App::get('/user', 'UserController@index');
 App::get('/user/create', 'UserController@create');
 App::post('/user/store', 'UserController@store');
-
-// Rute Edit, Update, dan Delete
 App::get('/user/edit/{id}', 'UserController@edit');
 App::post('/user/update/{id}', 'UserController@update');
 App::get('/user/delete/{id}', 'UserController@delete');
-
-// Rute Dinamis Detail
 App::get('/user/{id}', 'UserController@detail');
+
+// Rute Manajemen Role
+App::get('/role', 'RoleController@index');
+App::get('/role/akses/{id}', 'RoleController@akses');
+App::post('/role/simpanAkses/{id}', 'RoleController@simpanAkses');
 
 // Rute Manajemen Menu
 App::get('/menu', 'MenuController@index');

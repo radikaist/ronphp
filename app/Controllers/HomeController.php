@@ -1,23 +1,23 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
-use App\Models\UserModel;
-use App\Core\Auth; // Panggil penjaga keamanan
+use App\Core\Auth;
 
 class HomeController extends Controller 
 {
     public function __construct() {
-        Auth::check(); // Gembok pintu!
+        Auth::check(); 
     }
 
     public function index() {
-        $model = new UserModel();
-        $dataUsers = $model->getAllUsers(); 
+        // Hanya mengirimkan data dasar untuk Dashboard
         $data = [
-            'judul' => 'Halaman Utama RON PHP',
-            'pesan' => 'Selamat datang kembali, ' . $_SESSION['user_nama'] . '! 🚀',
-            'users' => $dataUsers
+            'judul' => 'Dashboard - RON PHP',
+            'pesan' => 'Selamat datang kembali, ' . $_SESSION['user_nama'] . '! 🚀'
         ];
+        
         $this->view('home/index', $data);
     }
 }
