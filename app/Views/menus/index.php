@@ -22,7 +22,6 @@
             <div style="margin-bottom: 15px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Pilih Menu Induk</label>
                 <?php
-                    // Pastikan dropdown ini tetap mengambil SEMUA menu induk meskipun tabelnya dipaginasi
                     $db = new \App\Core\Database();
                     $db->query("SELECT * FROM menus WHERE parent_id IS NULL AND tipe='sidebar' ORDER BY urutan ASC");
                     $induks = $db->resultSet();
@@ -100,7 +99,7 @@
             </table>
         </div>
 
-        <?php if($total_pages > 1): ?>
+        <?php if(isset($total_pages) && $total_pages > 1): ?>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
             <div style="font-size: 13px; color: var(--text-gray);">
                 Halaman <strong><?= $current_page; ?></strong> dari <strong><?= $total_pages; ?></strong>
@@ -115,9 +114,7 @@
                     <a href="?page=<?= $i; ?>" class="btn-sm" style="background: <?= $i == $current_page ? 'var(--ron-blue)' : '#f1f5f9'; ?>; color: <?= $i == $current_page ? '#fff' : 'var(--text-dark)'; ?>; text-decoration: none; border: 1px solid <?= $i == $current_page ? 'var(--ron-blue)' : '#cbd5e1'; ?>; padding: 5px 12px;">
                         <?= $i; ?>
                     </a>
-                <?php endforeach; ?>
-
-                <?php if ($current_page < $total_pages): ?>
+                <?php endfor; ?> <?php if ($current_page < $total_pages): ?>
                     <a href="?page=<?= $current_page + 1; ?>" class="btn-sm" style="background: #f1f5f9; color: var(--text-dark); text-decoration: none; border: 1px solid #cbd5e1;">Next &raquo;</a>
                 <?php endif; ?>
             </div>
