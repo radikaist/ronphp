@@ -16,10 +16,25 @@ class MenuModel
         return $this->db->resultSet();
     }
 
-    // PERBAIKAN: Mengubah ORDER BY agar memprioritaskan m1.urutan ASC paling awal
     public function getAllMenus() {
         $this->db->query('SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.urutan ASC, m1.id ASC');
         return $this->db->resultSet();
+    }
+
+    // FUNGSI BARU: Ambil data dibatasi (Untuk Pagination)
+    public function getAllMenusPaginated($limit, $offset) {
+        // Pastikan format angka aman
+        $limit = (int)$limit;
+        $offset = (int)$offset;
+        $this->db->query("SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.urutan ASC, m1.id ASC LIMIT $limit OFFSET $offset");
+        return $this->db->resultSet();
+    }
+
+    // FUNGSI BARU: Hitung total seluruh data menu
+    public function getTotalMenus() {
+        $this->db->query("SELECT COUNT(id) as total FROM menus");
+        $result = $this->db->single();
+        return $result['total'];
     }
 
     public function getMenuIdsByRole($role_id) {
@@ -40,7 +55,6 @@ class MenuModel
     public function insertMenu($data) {
         $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
         $urutan = empty($data['urutan']) ? 0 : $data['urutan'];
-
         $this->db->query('INSERT INTO menus (parent_id, nama_menu, url, icon, urutan, tipe) VALUES (:parent_id, :nama_menu, :url, :icon, :urutan, :tipe)');
         $this->db->bind(':parent_id', $parent_id);
         $this->db->bind(':nama_menu', $data['nama_menu']);
@@ -55,7 +69,6 @@ class MenuModel
     public function updateMenu($id, $data) {
         $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
         $urutan = isset($data['urutan']) && $data['urutan'] !== '' ? $data['urutan'] : 0;
-
         $this->db->query('UPDATE menus SET parent_id = :parent_id, nama_menu = :nama_menu, url = :url, icon = :icon, urutan = :urutan, tipe = :tipe WHERE id = :id');
         $this->db->bind(':parent_id', $parent_id);
         $this->db->bind(':nama_menu', $data['nama_menu']);
