@@ -5,7 +5,7 @@
 <div class="card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
         <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-users text-gray-500"></i> Data Pengguna
+            <i class="fa-solid fa-users text-gray-500"></i> Data Pengguna (Karyawan)
         </h3>
         <a href="/user/create" class="btn"><i class="fa-solid fa-plus" style="margin-right: 5px;"></i> Tambah Pengguna</a>
     </div>
@@ -15,9 +15,10 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>Aksi</th>
+                    <th>NAMA</th>
+                    <th>EMAIL</th>
+                    <th>HAK AKSES</th>
+                    <th>AKSI</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,6 +27,13 @@
                         <td style="color: var(--text-gray);">#<?= $user['id']; ?></td>
                         <td><strong style="color: var(--text-dark);"><?= $user['nama']; ?></strong></td>
                         <td><?= $user['email']; ?></td>
+                        
+                        <td>
+                            <span style="font-size: 11px; padding: 4px 8px; border-radius: 4px; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">
+                                <i class="fa-solid fa-shield-halved" style="margin-right: 3px;"></i> <?= $user['nama_role'] ?? 'Tidak Ada'; ?>
+                            </span>
+                        </td>
+                        
                         <td class="aksi-buttons">
                             <a href="/user/<?= $user['id']; ?>" class="btn-sm" style="background:#0ea5e9; color:white; text-decoration:none;"><i class="fa-solid fa-eye"></i> Detail</a>
                             <a href="/user/edit/<?= $user['id']; ?>" class="btn-sm" style="background:#f59e0b; color:white; margin: 0 4px; text-decoration:none;"><i class="fa-solid fa-pen-to-square"></i> Edit</a>

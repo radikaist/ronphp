@@ -4,32 +4,31 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\UserModel;
+use App\Models\RoleModel; // Panggil mesin Role
 use App\Core\Flasher;
-use App\Core\Auth; // <-- INI DIA KUNCI YANG HILANG!
+use App\Core\Auth;
 
 class UserController extends Controller 
 {
-    // GEMBOK PINTU: Hanya yang sudah login yang bisa mengakses semua fungsi di bawah ini
-    public function __construct() {
-        Auth::check(); 
-    }
+    public function __construct() { Auth::check(); }
 
     public function detail($id) {
         $model = new UserModel();
         $user = $model->getUserById($id);
-
         if (!$user) {
             http_response_code(404);
-            echo "<h1 style='text-align:center; margin-top:50px;'>404 - Pengguna Tidak Ditemukan!</h1>";
-            echo "<div style='text-align:center;'><a href='/'>Kembali ke Beranda</a></div>";
-            return;
+            die("Pengguna Tidak Ditemukan!");
         }
-
         $this->view('users/detail', ['judul' => 'Detail Profil', 'user' => $user]);
     }
 
+    // UPGRADE: Kirim data roles ke form tambah
     public function create() {
-        $this->view('users/create', ['judul' => 'Tambah Pengguna Baru']);
+        $roleModel = new RoleModel();
+        $this->view('users/create', [
+            'judul' => 'Tambah Pengguna Baru',
+            'roles' => $roleModel->getAllRoles()
+        ]);
     }
 
     public function store() {
@@ -38,18 +37,18 @@ class UserController extends Controller
             Flasher::setFlash($_POST['nama'], 'ditambahkan', 'success');
             header('Location: /');
             exit;
-        } else {
-            die("Gagal menyimpan data ke database.");
         }
     }
 
+    // UPGRADE: Kirim data roles ke form edit
     public function edit($id) {
         $model = new UserModel();
-        $data = [
+        $roleModel = new RoleModel();
+        $this->view('users/edit', [
             'judul' => 'Edit Pengguna',
-            'user'  => $model->getUserById($id)
-        ];
-        $this->view('users/edit', $data);
+            'user'  => $model->getUserById($id),
+            'roles' => $roleModel->getAllRoles()
+        ]);
     }
 
     public function update($id) {
