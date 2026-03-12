@@ -13,9 +13,23 @@ class MenuController extends Controller
 
     public function index() {
         $model = new MenuModel();
+
+        // --- LOGIKA PAGINATION ---
+        $limit = 10; // Jumlah item per halaman
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+        
+        $offset = ($page - 1) * $limit; // Titik mulai data
+        
+        $total_data = $model->getTotalMenus();
+        $total_pages = ceil($total_data / $limit); // Membulatkan ke atas (cth: 12 data / 10 = 2 halaman)
+
         $this->view('menus/index', [
-            'judul' => 'Manajemen Menu - RON PHP',
-            'menus' => $model->getAllMenus()
+            'judul'        => 'Manajemen Menu - RON PHP',
+            'menus'        => $model->getAllMenusPaginated($limit, $offset), // Ambil 10 data saja
+            'total_pages'  => $total_pages,
+            'current_page' => $page,
+            'start_number' => $offset + 1 // Agar nomor urut tabel tidak kembali ke 1 di halaman 2
         ]);
     }
 
@@ -28,26 +42,18 @@ class MenuController extends Controller
         }
     }
 
-    // FUNGSI BARU: Menampilkan Form Edit
     public function edit($id) {
         $model = new MenuModel();
         $menu = $model->getMenuById($id);
-
         if (!$menu) {
             http_response_code(404);
             die("Menu Tidak Ditemukan!");
         }
-
-        $this->view('menus/edit', [
-            'judul' => 'Edit Menu - RON PHP',
-            'menu'  => $menu
-        ]);
+        $this->view('menus/edit', ['judul' => 'Edit Menu - RON PHP', 'menu' => $menu]);
     }
 
-    // FUNGSI BARU: Memproses Update Data
     public function update($id) {
         $model = new MenuModel();
-        // Menggunakan >= 0 karena jika tidak ada yang dirubah, rowCount() mengembalikan 0
         if ($model->updateMenu($id, $_POST) >= 0) {
             Flasher::setFlash($_POST['nama_menu'], 'diperbarui', 'success');
             header('Location: /menu');

@@ -21,12 +21,16 @@
             
             <div style="margin-bottom: 15px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Pilih Menu Induk</label>
+                <?php
+                    // Pastikan dropdown ini tetap mengambil SEMUA menu induk meskipun tabelnya dipaginasi
+                    $db = new \App\Core\Database();
+                    $db->query("SELECT * FROM menus WHERE parent_id IS NULL AND tipe='sidebar' ORDER BY urutan ASC");
+                    $induks = $db->resultSet();
+                ?>
                 <select name="parent_id" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
                     <option value="" style="font-weight:bold; color:#3b82f6;">⭐ JADIKAN MENU INDUK (KIRI)</option>
-                    <?php foreach ($menus as $m): ?>
-                        <?php if (empty($m['parent_id']) && $m['tipe'] == 'sidebar'): ?>
-                            <option value="<?= $m['id']; ?>">Anak dari: <?= $m['nama_menu']; ?></option>
-                        <?php endif; ?>
+                    <?php foreach ($induks as $induk): ?>
+                        <option value="<?= $induk['id']; ?>">Anak dari: <?= $induk['nama_menu']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -70,16 +74,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach ($menus as $m) : ?>
+                    <?php $no = $start_number; foreach ($menus as $m) : ?>
                         <tr>
                             <td style="text-align:center; color:#94a3b8; font-size: 13px;"><?= $no++; ?></td>
-                            
                             <td style="text-align:center;">
                                 <span style="background: #eff6ff; color: #3b82f6; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; border: 1px solid #bfdbfe;">
                                     <?= $m['urutan']; ?>
                                 </span>
                             </td>
-                            
                             <td>
                                 <i class="fa-solid <?= $m['icon'] ?? 'fa-cube'; ?>" style="color: #94a3b8; width: 20px;"></i>
                                 <strong style="color: var(--text-dark);"><?= $m['nama_menu']; ?></strong>
@@ -97,8 +99,32 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <?php if($total_pages > 1): ?>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+            <div style="font-size: 13px; color: var(--text-gray);">
+                Halaman <strong><?= $current_page; ?></strong> dari <strong><?= $total_pages; ?></strong>
+            </div>
+            
+            <div style="display: flex; gap: 5px;">
+                <?php if ($current_page > 1): ?>
+                    <a href="?page=<?= $current_page - 1; ?>" class="btn-sm" style="background: #f1f5f9; color: var(--text-dark); text-decoration: none; border: 1px solid #cbd5e1;">&laquo; Prev</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?= $i; ?>" class="btn-sm" style="background: <?= $i == $current_page ? 'var(--ron-blue)' : '#f1f5f9'; ?>; color: <?= $i == $current_page ? '#fff' : 'var(--text-dark)'; ?>; text-decoration: none; border: 1px solid <?= $i == $current_page ? 'var(--ron-blue)' : '#cbd5e1'; ?>; padding: 5px 12px;">
+                        <?= $i; ?>
+                    </a>
+                <?php endforeach; ?>
+
+                <?php if ($current_page < $total_pages): ?>
+                    <a href="?page=<?= $current_page + 1; ?>" class="btn-sm" style="background: #f1f5f9; color: var(--text-dark); text-decoration: none; border: 1px solid #cbd5e1;">Next &raquo;</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+    </div>
 </div>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
