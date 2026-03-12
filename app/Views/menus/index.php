@@ -59,7 +59,9 @@
                                     <?= strtoupper($m['tipe']); ?>
                                 </span>
                             </td>
-                            <td>
+                            <td class="aksi-buttons">
+                                <a href="/menu/edit/<?= $m['id']; ?>" class="btn-sm" style="background:#f59e0b; color:white; text-decoration:none; margin-right: 4px;"><i class="fa-solid fa-pen-to-square"></i></a>
+                                
                                 <a href="/menu/delete/<?= $m['id']; ?>" class="btn-sm" style="background:#ef4444; color:white; text-decoration:none;" onclick="return confirm('Hapus menu ini?');"><i class="fa-solid fa-trash"></i></a>
                             </td>
                         </tr>

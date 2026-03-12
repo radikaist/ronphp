@@ -26,4 +26,6 @@ App::post('/role/simpanAkses/{id}', 'RoleController@simpanAkses');
 // Rute Manajemen Menu
 App::get('/menu', 'MenuController@index');
 App::post('/menu/store', 'MenuController@store');
+App::get('/menu/edit/{id}', 'MenuController@edit');        // Rute untuk panggil form edit
+App::post('/menu/update/{id}', 'MenuController@update');   // Rute untuk proses data update
 App::get('/menu/delete/{id}', 'MenuController@delete');

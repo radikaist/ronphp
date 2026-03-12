@@ -34,7 +34,13 @@ class MenuModel
         return $ids; 
     }
 
-    // FUNGSI BARU: Tambah Menu
+    // FUNGSI BARU: Ambil 1 data menu berdasarkan ID
+    public function getMenuById($id) {
+        $this->db->query('SELECT * FROM menus WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
     public function insertMenu($data) {
         $this->db->query('INSERT INTO menus (nama_menu, url, icon, tipe) VALUES (:nama_menu, :url, :icon, :tipe)');
         $this->db->bind(':nama_menu', $data['nama_menu']);
@@ -45,9 +51,19 @@ class MenuModel
         return $this->db->rowCount();
     }
 
-    // FUNGSI BARU: Hapus Menu
+    // FUNGSI BARU: Update Menu
+    public function updateMenu($id, $data) {
+        $this->db->query('UPDATE menus SET nama_menu = :nama_menu, url = :url, icon = :icon, tipe = :tipe WHERE id = :id');
+        $this->db->bind(':nama_menu', $data['nama_menu']);
+        $this->db->bind(':url', $data['url']);
+        $this->db->bind(':icon', $data['icon']);
+        $this->db->bind(':tipe', $data['tipe']);
+        $this->db->bind(':id', $id);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function deleteMenu($id) {
-        // Hapus juga relasinya di role_menu agar tidak ada data yatim piatu (orphan data)
         $this->db->query('DELETE FROM role_menu WHERE menu_id = :id');
         $this->db->bind(':id', $id);
         $this->db->execute();
