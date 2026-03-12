@@ -6,22 +6,19 @@ use App\Core\Database;
 class MenuModel
 {
     private $db;
-
     public function __construct() { $this->db = new Database(); }
 
     public function getMenusByRole($role_id, $tipe = 'sidebar') {
-        $query = "SELECT m.* FROM menus m 
-                  JOIN role_menu rm ON m.id = rm.menu_id 
-                  WHERE rm.role_id = :role_id AND m.tipe = :tipe 
-                  ORDER BY m.id ASC";
+        $query = "SELECT m.* FROM menus m JOIN role_menu rm ON m.id = rm.menu_id WHERE rm.role_id = :role_id AND m.tipe = :tipe ORDER BY m.id ASC";
         $this->db->query($query);
         $this->db->bind(':role_id', $role_id);
         $this->db->bind(':tipe', $tipe);
         return $this->db->resultSet();
     }
 
+    // UPGRADE: Join tabel untuk mendapatkan nama induknya
     public function getAllMenus() {
-        $this->db->query('SELECT * FROM menus ORDER BY tipe DESC, id ASC');
+        $this->db->query('SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.tipe DESC, m1.parent_id ASC, m1.id ASC');
         return $this->db->resultSet();
     }
 
@@ -34,15 +31,17 @@ class MenuModel
         return $ids; 
     }
 
-    // FUNGSI BARU: Ambil 1 data menu berdasarkan ID
     public function getMenuById($id) {
         $this->db->query('SELECT * FROM menus WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
 
+    // UPGRADE: Tambah parameter parent_id
     public function insertMenu($data) {
-        $this->db->query('INSERT INTO menus (nama_menu, url, icon, tipe) VALUES (:nama_menu, :url, :icon, :tipe)');
+        $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
+        $this->db->query('INSERT INTO menus (parent_id, nama_menu, url, icon, tipe) VALUES (:parent_id, :nama_menu, :url, :icon, :tipe)');
+        $this->db->bind(':parent_id', $parent_id);
         $this->db->bind(':nama_menu', $data['nama_menu']);
         $this->db->bind(':url', $data['url']);
         $this->db->bind(':icon', $data['icon']);
@@ -51,9 +50,11 @@ class MenuModel
         return $this->db->rowCount();
     }
 
-    // FUNGSI BARU: Update Menu
+    // UPGRADE: Update parameter parent_id
     public function updateMenu($id, $data) {
-        $this->db->query('UPDATE menus SET nama_menu = :nama_menu, url = :url, icon = :icon, tipe = :tipe WHERE id = :id');
+        $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
+        $this->db->query('UPDATE menus SET parent_id = :parent_id, nama_menu = :nama_menu, url = :url, icon = :icon, tipe = :tipe WHERE id = :id');
+        $this->db->bind(':parent_id', $parent_id);
         $this->db->bind(':nama_menu', $data['nama_menu']);
         $this->db->bind(':url', $data['url']);
         $this->db->bind(':icon', $data['icon']);
@@ -67,7 +68,6 @@ class MenuModel
         $this->db->query('DELETE FROM role_menu WHERE menu_id = :id');
         $this->db->bind(':id', $id);
         $this->db->execute();
-
         $this->db->query('DELETE FROM menus WHERE id = :id');
         $this->db->bind(':id', $id);
         $this->db->execute();

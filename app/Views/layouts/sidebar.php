@@ -1,15 +1,42 @@
 <?php
-// Panggil MenuModel
 use App\Models\MenuModel;
-
 $menuModel = new MenuModel();
-// Ambil Role ID dari Session (default 0 jika belum ada)
-$role_id = $_SESSION['role_id'] ?? 0; 
-// Ambil URL yang sedang dibuka untuk efek menu aktif
+$role_id = $_SESSION['role_id'] ?? 0;
 $current_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Tarik data menu dari database khusus untuk role ini
-$menus = $menuModel->getMenusByRole($role_id, 'sidebar');
+// Tarik data menu
+$all_menus = $menuModel->getMenusByRole($role_id, 'sidebar');
+
+$parents = [];
+$children = [];
+$active_parent_id = null;
+
+// Pisahkan Induk dan Anak
+foreach($all_menus as $menu) {
+    if (empty($menu['parent_id'])) {
+        $parents[$menu['id']] = $menu;
+    } else {
+        $children[$menu['parent_id']][] = $menu;
+        // Deteksi menu mana yang sedang aktif berdasarkan URL
+        if ($current_uri == $menu['url'] || (strpos($current_uri, $menu['url']) === 0 && $menu['url'] != '/')) {
+             $active_parent_id = $menu['parent_id'];
+        }
+    }
+}
+
+// Fallback untuk dashboard
+if ($current_uri == '/') {
+    foreach($children as $pid => $child_list) {
+        foreach($child_list as $c) {
+            if ($c['url'] == '/') $active_parent_id = $pid;
+        }
+    }
+}
+
+// Jika masih kosong (misal baru login), set default ke Induk pertama
+if (!$active_parent_id && !empty($parents)) {
+    $active_parent_id = array_key_first($parents);
+}
 ?>
 
 <nav class="sidebar-thin">
@@ -18,10 +45,14 @@ $menus = $menuModel->getMenusByRole($role_id, 'sidebar');
     </div>
     
     <div class="icon-menu">
-        <?php foreach($menus as $menu): ?>
-            <?php $active = ($current_uri == $menu['url']) ? 'active' : ''; ?>
-            <a href="<?= $menu['url']; ?>" class="icon-btn <?= $active; ?>" title="<?= $menu['nama_menu']; ?>">
-                <i class="fa-solid <?= $menu['icon']; ?>"></i>
+        <?php foreach($parents as $parent): ?>
+            <?php 
+                $is_active = ($parent['id'] == $active_parent_id) ? 'active' : ''; 
+                // Jika icon induk diklik, otomatis arahkan ke URL anak pertamanya
+                $link = isset($children[$parent['id']][0]) ? $children[$parent['id']][0]['url'] : '#';
+            ?>
+            <a href="<?= $link; ?>" class="icon-btn <?= $is_active; ?>" title="<?= $parent['nama_menu']; ?>">
+                <i class="fa-solid <?= $parent['icon']; ?>"></i>
             </a>
         <?php endforeach; ?>
     </div>
@@ -36,12 +67,16 @@ $menus = $menuModel->getMenusByRole($role_id, 'sidebar');
 
 <nav class="sidebar-wide">
     <div class="wide-header">
-        DASHBOARDS
+        <?= strtoupper($parents[$active_parent_id]['nama_menu'] ?? 'MENU'); ?>
     </div>
     <div class="wide-menu">
-        <?php foreach($menus as $menu): ?>
-            <?php $active = ($current_uri == $menu['url']) ? 'active' : ''; ?>
-            <a href="<?= $menu['url']; ?>" class="wide-link <?= $active; ?>"><?= $menu['nama_menu']; ?></a>
-        <?php endforeach; ?>
+        <?php if(isset($children[$active_parent_id])): ?>
+            <?php foreach($children[$active_parent_id] as $child): ?>
+                <?php $active = ($current_uri == $child['url'] || (strpos($current_uri, $child['url']) === 0 && $child['url'] != '/')) ? 'active' : ''; ?>
+                <a href="<?= $child['url']; ?>" class="wide-link <?= $active; ?>">
+                    <i class="fa-solid <?= $child['icon']; ?>" style="margin-right:8px; opacity:0.6;"></i> <?= $child['nama_menu']; ?>
+                </a>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 </nav>

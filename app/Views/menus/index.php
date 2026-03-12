@@ -13,14 +13,29 @@
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Nama Menu</label>
                 <input type="text" name="nama_menu" placeholder="Contoh: Laporan Penjualan" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             </div>
+            
             <div style="margin-bottom: 15px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">URL Route</label>
                 <input type="text" name="url" placeholder="Contoh: /laporan" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Pilih Menu Induk</label>
+                <select name="parent_id" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="" style="font-weight:bold; color:#3b82f6;">⭐ JADIKAN MENU INDUK (KIRI)</option>
+                    <?php foreach ($menus as $m): ?>
+                        <?php if (empty($m['parent_id']) && $m['tipe'] == 'sidebar'): ?>
+                            <option value="<?= $m['id']; ?>">Anak dari: <?= $m['nama_menu']; ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <div style="margin-bottom: 15px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Class Icon (FontAwesome)</label>
                 <input type="text" name="icon" placeholder="Contoh: fa-chart-line" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             </div>
+            
             <div style="margin-bottom: 25px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Tipe Menu</label>
                 <select name="tipe" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
@@ -41,6 +56,7 @@
                 <thead>
                     <tr>
                         <th>MENU</th>
+                        <th>INDUK</th>
                         <th>URL</th>
                         <th>TIPE</th>
                         <th>AKSI</th>
@@ -53,6 +69,9 @@
                                 <i class="fa-solid <?= $m['icon'] ?? 'fa-cube'; ?>" style="color: #94a3b8; width: 20px;"></i>
                                 <strong style="color: var(--text-dark);"><?= $m['nama_menu']; ?></strong>
                             </td>
+                            <td style="font-size: 12px; color: #64748b;">
+                                <?= $m['nama_parent'] ? '↳ ' . $m['nama_parent'] : '<span style="color:#3b82f6; font-weight:bold;">Menu Induk</span>'; ?>
+                            </td>
                             <td style="color: var(--ron-blue); font-family: monospace;"><?= $m['url']; ?></td>
                             <td>
                                 <span style="font-size: 11px; padding: 4px 8px; border-radius: 4px; background: <?= $m['tipe'] == 'sidebar' ? '#dbeafe; color: #1d4ed8;' : '#ffedd5; color: #c2410c;'; ?>">
@@ -61,7 +80,6 @@
                             </td>
                             <td class="aksi-buttons">
                                 <a href="/menu/edit/<?= $m['id']; ?>" class="btn-sm" style="background:#f59e0b; color:white; text-decoration:none; margin-right: 4px;"><i class="fa-solid fa-pen-to-square"></i></a>
-                                
                                 <a href="/menu/delete/<?= $m['id']; ?>" class="btn-sm" style="background:#ef4444; color:white; text-decoration:none;" onclick="return confirm('Hapus menu ini?');"><i class="fa-solid fa-trash"></i></a>
                             </td>
                         </tr>

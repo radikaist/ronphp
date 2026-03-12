@@ -17,6 +17,26 @@
         </div>
         
         <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Pilih Menu Induk</label>
+            <?php
+                // Menarik data menu induk murni langsung dari database untuk keperluan dropdown
+                $db = new \App\Core\Database();
+                $db->query("SELECT * FROM menus WHERE parent_id IS NULL AND tipe='sidebar'");
+                $induks = $db->resultSet();
+            ?>
+            <select name="parent_id" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="" style="font-weight:bold; color:#3b82f6;">⭐ JADIKAN MENU INDUK (KIRI)</option>
+                <?php foreach ($induks as $induk): ?>
+                    <?php if($induk['id'] != $menu['id']): ?>
+                        <option value="<?= $induk['id']; ?>" <?= ($menu['parent_id'] == $induk['id']) ? 'selected' : ''; ?>>
+                            Anak dari: <?= $induk['nama_menu']; ?>
+                        </option>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
             <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-gray); margin-bottom: 5px;">Class Icon (FontAwesome)</label>
             <input type="text" name="icon" value="<?= $menu['icon']; ?>" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
         </div>
