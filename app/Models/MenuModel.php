@@ -8,7 +8,6 @@ class MenuModel
     private $db;
     public function __construct() { $this->db = new Database(); }
 
-    // UPGRADE: Tambahkan ORDER BY m.urutan ASC
     public function getMenusByRole($role_id, $tipe = 'sidebar') {
         $query = "SELECT m.* FROM menus m JOIN role_menu rm ON m.id = rm.menu_id WHERE rm.role_id = :role_id AND m.tipe = :tipe ORDER BY m.urutan ASC, m.id ASC";
         $this->db->query($query);
@@ -17,9 +16,9 @@ class MenuModel
         return $this->db->resultSet();
     }
 
-    // UPGRADE: Tambahkan m1.urutan ASC
+    // PERBAIKAN: Mengubah ORDER BY agar memprioritaskan m1.urutan ASC paling awal
     public function getAllMenus() {
-        $this->db->query('SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.tipe DESC, m1.parent_id ASC, m1.urutan ASC, m1.id ASC');
+        $this->db->query('SELECT m1.*, m2.nama_menu as nama_parent FROM menus m1 LEFT JOIN menus m2 ON m1.parent_id = m2.id ORDER BY m1.urutan ASC, m1.id ASC');
         return $this->db->resultSet();
     }
 
@@ -38,7 +37,6 @@ class MenuModel
         return $this->db->single();
     }
 
-    // UPGRADE: Tambah parameter urutan
     public function insertMenu($data) {
         $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
         $urutan = empty($data['urutan']) ? 0 : $data['urutan'];
@@ -54,7 +52,6 @@ class MenuModel
         return $this->db->rowCount();
     }
 
-    // UPGRADE: Update parameter urutan
     public function updateMenu($id, $data) {
         $parent_id = empty($data['parent_id']) ? null : $data['parent_id'];
         $urutan = isset($data['urutan']) && $data['urutan'] !== '' ? $data['urutan'] : 0;
